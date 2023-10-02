@@ -21,3 +21,6 @@ python setup.py install
 
 ```
 !pip istall ipykernel```
+
+### step 1 - data ingestion 
+

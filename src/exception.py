@@ -18,7 +18,7 @@ class CustomException(Exception):
     def __str__(self) -> str:
         return self.error_message#print custom exception will print custom error message
 
-if __name__ == "__main__": # all the excution run from here
+"""if __name__ == "__main__": # all the excution run from here
 
     logging.info("logging has started")
 
@@ -27,6 +27,6 @@ if __name__ == "__main__": # all the excution run from here
     except Exception as e:
         logging.info("error has occured")
         raise CustomException(e, sys)
-
+"""
 
         
