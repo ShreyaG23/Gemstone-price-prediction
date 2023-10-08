@@ -10,6 +10,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from src.components import data_transformations
+from src.components import model_trainer
 
 #data class is use to store class variables, no need for constructer
 
@@ -59,4 +60,6 @@ if __name__ == "__main__":
     obj = DataIngestion()
     train_data_path, test_data_path = obj.initiate_data_ingestion()
     data_trans = data_transformations.DataTransformation()
-    trin_arr, test_arr,_ = data_trans.initiate_data_transformation(train_data_path, test_data_path)
+    train_arr, test_arr,_ = data_trans.initiate_data_transformation(train_data_path, test_data_path)
+    model_training = model_trainer.ModelTrainer()
+    model_training.Initiate_model_training(train_arr, test_arr)
