@@ -1,65 +1,49 @@
-#Data ingetion is reading the dataset
-#we use os to create the path
-
-
-import os 
+import os
 import sys
-from src.exception import CustomException
 from src.logger import logging
+from src.exception import CustomException
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
-from src.components import data_transformations
-from src.components import model_trainer
 
-#data class is use to store class variables, no need for constructer
+from src.components.data_transformation import DataTransformation
+
+
+## Intitialize the Data Ingetion Configuration
 
 @dataclass
-class DataIngestionConfig:
-    train_data_path: str = os.path.join("artifacts", "train.csv")
-    test_data_path: str = os.path.join("artifacts", "test.csv")
-    raw_data_path: str = os.path.join("artifacts", "raw.csv")
+class DataIngestionconfig:
+    train_data_path:str=os.path.join('artifacts','train.csv')
+    test_data_path:str=os.path.join('artifacts','test.csv')
+    raw_data_path:str=os.path.join('artifacts','raw.csv')
 
+## create a class for Data Ingestion
 class DataIngestion:
     def __init__(self):
-        self.ingestion_config = DataIngestionConfig()
+        self.ingestion_config=DataIngestionconfig()
 
     def initiate_data_ingestion(self):
-        logging.info("data ingestion process has been started")
+        logging.info('Data Ingestion methods Starts')
         try:
-            df = pd.read_csv("C:/Users/raja soni/Desktop/FSDS 2022/Projects/my_regression_gemstone/notebook/data/gemstone.csv")
-            logging.info("data set read as pandas data frame")
-            
-            #Exist_ok means if directory already exist then don't create
-            os.makedirs(os.path.dirname(self.ingestion_config.raw_data_path), exist_ok= True)
-            df.to_csv(self.ingestion_config.raw_data_path, index = False)
+            df=pd.read_csv(os.path.join('notebook/data','gemstone.csv'))
+            logging.info('Dataset read as pandas Dataframe')
 
-            logging.info("Train test split")
-            Train_set,Test_set = train_test_split(df, test_size=0.30, random_state=34)
+            os.makedirs(os.path.dirname(self.ingestion_config.raw_data_path),exist_ok=True)
+            df.to_csv(self.ingestion_config.raw_data_path,index=False)
+            logging.info('Train test split')
+            train_set,test_set=train_test_split(df,test_size=0.30,random_state=42)
 
-            logging.info("Ingestion of data is completed")
+            train_set.to_csv(self.ingestion_config.train_data_path,index=False,header=True)
+            test_set.to_csv(self.ingestion_config.test_data_path,index=False,header=True)
 
-            Train_set.to_csv(self.ingestion_config.train_data_path, index =False,header = True)
-            Test_set.to_csv(self.ingestion_config.test_data_path, index =False,header = True)
+            logging.info('Ingestion of Data is completed')
 
-            return (
+            return(
                 self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path
             )
+  
             
-
-
         except Exception as e:
-            logging.info("Exception occured at data inegstion part")
-
-            raise CustomException(e, sys)
-        
-## run the data ingestion 
-
-if __name__ == "__main__":
-    obj = DataIngestion()
-    train_data_path, test_data_path = obj.initiate_data_ingestion()
-    data_trans = data_transformations.DataTransformation()
-    train_arr, test_arr,_ = data_trans.initiate_data_transformation(train_data_path, test_data_path)
-    model_training = model_trainer.ModelTrainer()
-    model_training.Initiate_model_training(train_arr, test_arr)
+            logging.info('Exception occured at Data Ingestion stage')
+            raise CustomException(e,sys)
